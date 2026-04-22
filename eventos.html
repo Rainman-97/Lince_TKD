@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eventos | Lynx Hoga Ki</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: "Montserrat", sans-serif; background: #f5f3ef; color: #101522; }
+    .wrap { width: min(calc(100% - 2rem), 1000px); margin: 0 auto; padding: 2rem 0 4rem; }
+    h1, h2 { margin: 0; font-family: "Bebas Neue", sans-serif; letter-spacing: .04em; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: .74rem; font-weight: 800; color: #d91f16; margin: 0 0 .4rem; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .corner-menu { position: relative; }
+    .corner-menu-toggle {
+      width: 62px; height: 62px; padding: .2rem; border: 2px solid rgba(16, 21, 34, .12);
+      border-radius: 50%; background: #fff; box-shadow: 0 14px 28px rgba(16, 21, 34, .14); cursor: pointer;
+    }
+    .corner-menu-toggle img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+    .corner-menu-panel {
+      position: absolute; top: calc(100% + .8rem); right: 0; min-width: 220px; padding: .8rem; display: none;
+      flex-direction: column; gap: .35rem; background: rgba(255,255,255,.98); border: 1px solid rgba(16,21,34,.08);
+      border-radius: 22px; box-shadow: 0 24px 40px rgba(16,21,34,.18);
+    }
+    .corner-menu-panel.open { display: flex; }
+    .corner-menu-panel a {
+      text-decoration: none; color: #101522; padding: .8rem .9rem; border-radius: 14px; font-weight: 700;
+    }
+    .corner-menu-panel a:hover { background: rgba(217,31,22,.08); color: #b9150d; }
+    .panel { background: #fff; border-radius: 28px; padding: 2rem; box-shadow: 0 20px 50px rgba(16,21,34,.14); border: 1px solid rgba(16,21,34,.08); }
+    p { line-height: 1.8; color: #2c3242; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <p class="eyebrow">Lynx Hoga Ki</p>
+        <h1>Eventos</h1>
+      </div>
+      <div class="corner-menu">
+        <button class="corner-menu-toggle" type="button" aria-expanded="false" aria-controls="corner-menu-panel-eventos" aria-label="Abrir menú">
+          <img src="Lynx.jpg" alt="Logo de Lynx Hoga Ki">
+        </button>
+        <div id="corner-menu-panel-eventos" class="corner-menu-panel">
+          <a href="index.html">Inicio</a>
+          <a href="album-fotos.html">Álbum de fotos</a>
+          <a href="eventos.html">Eventos</a>
+          <a href="cronograma.html">Cronograma</a>
+          <a href="profesores.html">Equipo formativo</a>
+        </div>
+      </div>
+    </div>
+    <section class="panel">
+      <p class="eyebrow">Próximamente</p>
+      <h2>Eventos que se desarrollen a futuro quedan aca marcados</h2>
+      <p>Aplica para fechas como, dia lince, campamentos, seminarios etc</p>
+    </section>
+  </div>
+  <script>
+    const menuButton = document.querySelector(".corner-menu-toggle");
+    const menuPanel = document.querySelector(".corner-menu-panel");
+    if (menuButton && menuPanel) {
+      menuButton.addEventListener("click", () => {
+        const isOpen = menuPanel.classList.toggle("open");
+        menuButton.setAttribute("aria-expanded", String(isOpen));
+      });
+      document.addEventListener("click", (event) => {
+        const clickedInsideMenu = menuPanel.contains(event.target) || menuButton.contains(event.target);
+        if (!clickedInsideMenu) {
+          menuPanel.classList.remove("open");
+          menuButton.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
