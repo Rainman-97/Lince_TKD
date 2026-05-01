@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cronograma | Lynx Hoga Ki</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: "Montserrat", sans-serif; background: #101522; color: #fff; }
+    .wrap { width: min(calc(100% - 2rem), 1000px); margin: 0 auto; padding: 2rem 0 4rem; }
+    h1, h2 { margin: 0; font-family: "Bebas Neue", sans-serif; letter-spacing: .04em; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: .74rem; font-weight: 800; color: #d91f16; margin: 0 0 .4rem; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .brand { display:flex; align-items:center; gap:.9rem; }
+    .brand img { width:72px; height:72px; border-radius:50%; border:2px solid rgba(255,255,255,.12); background:#fff; }
+    .brand-menu { position: relative; }
+    .brand-menu-toggle { border:0; padding:0; background:transparent; text-align:left; cursor:pointer; color:inherit; }
+    .brand-menu-panel {
+      position: absolute; top: calc(100% + .8rem); left: 0; min-width: 220px; padding: .8rem; display: none;
+      flex-direction: column; gap: .35rem; background: rgba(255,255,255,.98); border: 1px solid rgba(16,21,34,.08);
+      border-radius: 22px; box-shadow: 0 24px 40px rgba(0,0,0,.24);
+    }
+    .brand-menu-panel.open { display: flex; }
+    .brand-menu-panel a {
+      text-decoration: none; color: #101522; padding: .8rem .9rem; border-radius: 14px; font-weight: 700;
+    }
+    .brand-menu-panel a:hover { background: rgba(217,31,22,.08); color: #b9150d; }
+    .page-title { text-align:right; }
+    .panel { background: rgba(255,255,255,.06); border-radius: 28px; padding: 2rem; box-shadow: 0 20px 50px rgba(0,0,0,.2); border: 1px solid rgba(255,255,255,.08); }
+    p { line-height: 1.8; color: rgba(255,255,255,.82); }
+    .intro { max-width: 760px; margin-bottom: 1.8rem; }
+    .schedule-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .schedule-card {
+      padding: 1.4rem;
+      border-radius: 22px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .schedule-date {
+      display: inline-block;
+      margin: 0 0 .8rem;
+      padding: .35rem .75rem;
+      border-radius: 999px;
+      background: rgba(217,31,22,.18);
+      color: #fff;
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .schedule-card h2 {
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: .5rem;
+    }
+    .schedule-card p {
+      margin: 0;
+    }
+    .schedule-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1rem;
+      min-height: 44px;
+      padding: .7rem 1rem;
+      border: 0;
+      border-radius: 999px;
+      background: #d91f16;
+      color: #fff;
+      font: inherit;
+      font-size: .88rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+    .schedule-action:hover,
+    .schedule-action:focus-visible {
+      background: #b9150d;
+      transform: translateY(-1px);
+    }
+    .schedule-details {
+      display: none;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+    .schedule-details.open {
+      display: block;
+    }
+    .schedule-details p + p {
+      margin-top: .7rem;
+    }
+    .schedule-details a {
+      color: #fff;
+      font-weight: 800;
+      text-decoration: underline;
+      text-decoration-color: rgba(217,31,22,.75);
+      text-underline-offset: .18rem;
+    }
+    .event-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+      background: rgba(5,7,13,.78);
+      backdrop-filter: blur(10px);
+    }
+    .event-modal.open {
+      display: flex;
+    }
+    .event-modal-card {
+      position: relative;
+      width: min(920px, 100%);
+      max-height: min(88vh, 820px);
+      overflow: auto;
+      padding: 1.6rem;
+      border-radius: 24px;
+      background: #151b2b;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 28px 70px rgba(0,0,0,.38);
+    }
+    .event-close {
+      position: absolute;
+      top: .9rem;
+      right: .9rem;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .event-close:hover,
+    .event-close:focus-visible {
+      background: #d91f16;
+    }
+    .event-modal h2 {
+      padding-right: 2.6rem;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 1;
+    }
+    .event-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .8rem;
+      margin: 1.2rem 0;
+    }
+    .event-meta div {
+      padding: .85rem 1rem;
+      border-radius: 16px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .event-meta span {
+      display: block;
+      margin-bottom: .2rem;
+      color: rgba(255,255,255,.62);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .event-meta strong {
+      color: #fff;
+    }
+    .event-phases {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .8rem;
+      margin-top: 1rem;
+    }
+    .event-phase {
+      padding: 1rem;
+      border-radius: 16px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .event-phase h3 {
+      margin: 0 0 .45rem;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.7rem;
+      letter-spacing: .04em;
+      line-height: 1;
+    }
+    .event-phase p {
+      margin: 0;
+      font-size: .94rem;
+      line-height: 1.65;
+    }
+    .event-album-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      margin-top: 1rem;
+      padding: .75rem 1rem;
+      border: 0;
+      border-radius: 999px;
+      background: #fff;
+      color: #101522;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .event-album {
+      display: none;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .8rem;
+      margin-top: 1rem;
+    }
+    .event-album.open {
+      display: grid;
+    }
+    .event-album img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .schedule-card.pending {
+      background: rgba(255,255,255,.04);
+      border-style: dashed;
+    }
+    @media (max-width: 760px) {
+      .schedule-grid { grid-template-columns: 1fr; }
+      .panel { padding: 1.4rem; }
+      .event-modal-card { padding: 1.2rem; }
+      .event-meta,
+      .event-phases,
+      .event-album { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand-menu">
+        <button class="brand-menu-toggle" type="button" aria-expanded="false" aria-controls="brand-menu-panel-cronograma" aria-label="Abrir menú del club">
+          <div class="brand">
+            <img src="Lynx.jpg" alt="Logo de Lynx Hoga Ki">
+            <div>
+              <p class="eyebrow">Lynx Hoga Ki</p>
+              <h1>Club Deportivo Lynx Hoga Ki</h1>
+            </div>
+          </div>
+        </button>
+        <div id="brand-menu-panel-cronograma" class="brand-menu-panel">
+          <a href="index.html">Inicio</a>
+          <a href="album-fotos.html">Álbum de fotos</a>
+          <a href="cronograma.html">Cronograma</a>
+          <a href="profesores.html">Equipo formativo</a>
+        </div>
+      </div>
+      <div class="page-title">
+        <p class="eyebrow">Sección</p>
+        <h1>Cronograma</h1>
+      </div>
+    </div>
+    <section class="panel">
+      <div class="intro">
+        <p class="eyebrow">Agenda del club</p>
+        <h2>Próximas fechas de Lynx Hoga Ki</h2>
+        <p>Aquí queda concentrada la programación especial del club, con seminarios, campamentos y participaciones deportivas confirmadas.</p>
+      </div>
+      <div class="schedule-grid">
+        <article class="schedule-card">
+          <p class="schedule-date">7 de junio</p>
+          <h2>Copa Colombia</h2>
+          <p>Jornada deportiva de participación y representación del Club Deportivo Lynx Hoga Ki.</p>
+          <button class="schedule-action" type="button" data-event-modal="copa-event-modal">Ver más</button>
+          <div class="schedule-details">
+            <p>La Copa Colombia de Taekwondo reúne deportistas por categorías y modalidades como combate, poomsae, freestyle, TK3 y para-taekwondo. En la edición oficial publicada por la Secretaría de Cultura, Recreación y Deporte de Bogotá, el evento fue organizado por la Federación Colombiana de Taekwondo y se rigió por el reglamento de World Taekwondo.</p>
+            <p><a href="https://www.culturarecreacionydeporte.gov.co/es/eventos/copa-colombia-de-taekwondo" target="_blank" rel="noopener">Fuente oficial consultada</a></p>
+          </div>
+        </article>
+        <article class="schedule-card">
+          <p class="schedule-date">7 de junio</p>
+          <h2>Seminario del Sensei Jhon</h2>
+          <p>Espacio dedicado a la mejora de técnica, ajustes y disciplina, impartido desde el karate con trabajo de kata.</p>
+          <button class="schedule-action" type="button" data-event-modal="jhon-event-modal">Ver más</button>
+          <div class="schedule-details">
+            <p>El seminario estará enfocado en precisión técnica, postura, control, correcciones personalizadas y disciplina marcial aplicada al entrenamiento del club.</p>
+          </div>
+        </article>
+        <article class="schedule-card">
+          <p class="schedule-date">21 de junio</p>
+          <h2>Campamento del Master Alexander</h2>
+          <p>Evento formativo de la academia CME MOM JEONGSIN con fogueos, saltos, combates, exhibiciones y medallería.</p>
+          <button class="schedule-action" type="button" data-event-modal="master-event-modal">Ver más</button>
+          <div class="schedule-details">
+            <p>Encuentro de la academia CME MOM JEONGSIN dirigido por el Master Alexander, pensado especialmente para el desarrollo del estudiante mediante retos técnicos, preparación física, disciplina y participación deportiva.</p>
+            <p>Incluye fogueos, salto alto, salto largo, combates y exhibiciones de escuelas y academias, con premiación por medallería para reconocer el esfuerzo de los participantes.</p>
+            <p>También busca fortalecer el trabajo en equipo, la convivencia y el intercambio con practicantes de otras academias.</p>
+          </div>
+        </article>
+        <article class="schedule-card">
+          <p class="schedule-date">Primera semana de julio</p>
+          <h2>Exámenes de ascenso de cinturón</h2>
+          <p>Evaluación técnica para estudiantes que se preparan para avanzar de grado.</p>
+          <button class="schedule-action" type="button" data-event-modal="exam-event-modal">Ver más</button>
+          <div class="schedule-details">
+            <p>Los practicantes presentarán el proceso trabajado en clase: técnica base, formas, defensa, disciplina, actitud y dominio correspondiente a su nivel.</p>
+          </div>
+        </article>
+        <article class="schedule-card pending">
+          <p class="schedule-date">Próximamente</p>
+          <h2>Nueva fecha por confirmar</h2>
+          <p>Este espacio queda reservado para la siguiente actividad oficial que programe el club.</p>
+          <button class="schedule-action" type="button" aria-expanded="false">Ver más</button>
+          <div class="schedule-details">
+            <p>Cuando el club confirme la siguiente actividad, aquí se agrega el lugar, horarios, requisitos y recomendaciones para los participantes.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+  <div class="event-modal" id="copa-event-modal" aria-hidden="true">
+    <div class="event-modal-card" role="dialog" aria-modal="true" aria-labelledby="copa-event-title">
+      <button class="event-close" type="button" aria-label="Cerrar ventana">X</button>
+      <p class="eyebrow">Competencia nacional</p>
+      <h2 id="copa-event-title">Copa Colombia</h2>
+      <div class="event-meta">
+        <div>
+          <span>Fecha</span>
+          <strong>7 de junio</strong>
+        </div>
+        <div>
+          <span>Lugar</span>
+          <strong>(No aplica)</strong>
+        </div>
+      </div>
+      <p>La Copa Colombia de Taekwondo es un evento nacional de alto nivel que reúne deportistas de categorías pre-infantil, infantil, juvenil y senior. En ediciones anteriores ha incluido modalidades como combate individual, poomsae, freestyle, TK3 y para-taekwondo.</p>
+      <p>Según la publicación oficial de la Secretaría de Cultura, Recreación y Deporte de Bogotá, la edición XXXVII fue organizada por la Federación Colombiana de Taekwondo y se rigió por el reglamento vigente de World Taekwondo.</p>
+      <button class="event-album-toggle" type="button" aria-expanded="false" data-close-label="Ocultar imágenes anteriores">Ver imágenes anteriores</button>
+      <div class="event-album" aria-label="Álbum de Copa Colombia y eventos nacionales de taekwondo">
+        <img loading="lazy" src="https://www.culturarecreacionydeporte.gov.co/sites/default/files/images/idrd-taekwondo-palacio-de-los-deportes.png" alt="Copa Colombia de Taekwondo en el Palacio de los Deportes, foto IDRD">
+        <img loading="lazy" src="https://boyaca7dias.com.co/wp-content/uploads/2024/06/delegacion-sogamoso-taekwondo.jpg" alt="Delegación boyacense campeona de Copa Colombia de Taekwondo 2024">
+        <img loading="lazy" src="https://www.boyaca.gov.co/wp-content/uploads/2024/12/WhatsApp-Image-2024-12-23-at-11.08.58-AM.jpeg" alt="Delegación de taekwondo en competencia nacional de 2024">
+        <img loading="lazy" src="https://bogota.gov.co/sites/default/files/styles/1050px/public/2025-06/equipo-bogota-cuenta-con-agenda-llena-para-proximos-eventos-deportivos-2.png" alt="Agenda deportiva de Bogotá con participación en Copa Colombia de Taekwondo">
+        <img loading="lazy" src="copa-colombia-5.jpg" alt="Combate de taekwondo en competencia nacional">
+      </div>
+      <p><a href="https://www.culturarecreacionydeporte.gov.co/es/eventos/copa-colombia-de-taekwondo" target="_blank" rel="noopener">Fuente principal</a></p>
+    </div>
+  </div>
+  <div class="event-modal" id="jhon-event-modal" aria-hidden="true">
+    <div class="event-modal-card" role="dialog" aria-modal="true" aria-labelledby="jhon-event-title">
+      <button class="event-close" type="button" aria-label="Cerrar ventana">X</button>
+      <p class="eyebrow">Seminario técnico</p>
+      <h2 id="jhon-event-title">Seminario del Sensei Jhon</h2>
+      <div class="event-meta">
+        <div>
+          <span>Fecha</span>
+          <strong>7 de junio</strong>
+        </div>
+        <div>
+          <span>Lugar</span>
+          <strong>(No confirmado)</strong>
+        </div>
+      </div>
+      <p>El seminario se enfoca en precisión, postura, control corporal y correcciones que ayudan al estudiante a entender mejor cada movimiento.</p>
+      <p>La jornada integra acondicionamiento físico, práctica guiada, revisión de bases, formas y aplicación marcial, fortaleciendo la concentración y la exigencia personal dentro del entrenamiento.</p>
+      <button class="event-album-toggle" type="button" aria-expanded="false" data-close-label="Ocultar seminarios anteriores">Ver seminarios anteriores</button>
+      <div class="event-album" aria-label="Álbum de seminarios anteriores">
+        <img loading="lazy" src="seminario-jhon-01.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 1">
+        <img loading="lazy" src="seminario-jhon-02.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 2">
+        <img loading="lazy" src="seminario-jhon-03.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 3">
+        <img loading="lazy" src="seminario-jhon-04.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 4">
+        <img loading="lazy" src="seminario-jhon-05.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 5">
+        <img loading="lazy" src="seminario-jhon-06.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 6">
+        <img loading="lazy" src="seminario-jhon-07.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 7">
+        <img loading="lazy" src="seminario-jhon-08.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 8">
+        <img loading="lazy" src="seminario-jhon-09.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 9">
+        <img loading="lazy" src="seminario-jhon-10.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 10">
+        <img loading="lazy" src="seminario-jhon-11.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 11">
+        <img loading="lazy" src="seminario-jhon-12.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 12">
+        <img loading="lazy" src="seminario-jhon-13.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 13">
+        <img loading="lazy" src="seminario-jhon-14.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 14">
+        <img loading="lazy" src="seminario-jhon-15.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 15">
+        <img loading="lazy" src="seminario-jhon-16.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 16">
+        <img loading="lazy" src="seminario-jhon-17.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 17">
+        <img loading="lazy" src="seminario-jhon-18.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 18">
+        <img loading="lazy" src="seminario-jhon-19.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 19">
+        <img loading="lazy" src="seminario-jhon-20.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 20">
+        <img loading="lazy" src="seminario-jhon-21.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 21">
+        <img loading="lazy" src="seminario-jhon-22.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 22">
+        <img loading="lazy" src="seminario-jhon-23.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 23">
+        <img loading="lazy" src="seminario-jhon-24.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 24">
+        <img loading="lazy" src="seminario-jhon-25.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 25">
+        <img loading="lazy" src="seminario-jhon-26.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 26">
+        <img loading="lazy" src="seminario-jhon-27.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 27">
+        <img loading="lazy" src="seminario-jhon-28.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 28">
+        <img loading="lazy" src="seminario-jhon-29.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 29">
+        <img loading="lazy" src="seminario-jhon-30.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 30">
+        <img loading="lazy" src="seminario-jhon-31.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 31">
+        <img loading="lazy" src="seminario-jhon-32.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 32">
+        <img loading="lazy" src="seminario-jhon-33.jpeg" alt="Seminario del Sensei Jhon, práctica técnica anterior 33">
+      </div>
+    </div>
+  </div>
+  <div class="event-modal" id="master-event-modal" aria-hidden="true">
+    <div class="event-modal-card" role="dialog" aria-modal="true" aria-labelledby="master-event-title">
+      <button class="event-close" type="button" aria-label="Cerrar ventana">X</button>
+      <p class="eyebrow">Campamento formativo</p>
+      <h2 id="master-event-title">Campamento del Master Alexander</h2>
+      <div class="event-meta">
+        <div>
+          <span>Fecha</span>
+          <strong>21 de junio</strong>
+        </div>
+        <div>
+          <span>Lugar</span>
+          <strong>(No aplica)</strong>
+        </div>
+      </div>
+      <p>Evento de la academia CME MOM JEONGSIN dirigido por el Master Alexander, pensado especialmente para el desarrollo del estudiante a través de retos técnicos, preparación física, disciplina, convivencia y participación deportiva.</p>
+      <p>Incluye fogueos, salto alto, salto largo, combates y exhibiciones de escuelas y academias, con premiación por medallería para reconocer el esfuerzo, la actitud y el crecimiento de los participantes.</p>
+      <p>También fortalece el trabajo en equipo, la integración del club y la convivencia con practicantes de otras academias.</p>
+      <button class="event-album-toggle" type="button" aria-expanded="false" data-close-label="Ocultar campamentos anteriores">Ver campamentos anteriores</button>
+      <div class="event-album" aria-label="Álbum del Campamento del Master Alexander">
+        <img loading="lazy" src="master-alexander-01.jpeg" alt="Campamento del Master Alexander, actividad anterior 1">
+        <img loading="lazy" src="master-alexander-02.jpeg" alt="Campamento del Master Alexander, actividad anterior 2">
+        <img loading="lazy" src="master-alexander-03.jpeg" alt="Campamento del Master Alexander, actividad anterior 3">
+        <img loading="lazy" src="master-alexander-04.jpeg" alt="Campamento del Master Alexander, actividad anterior 4">
+        <img loading="lazy" src="master-alexander-05.jpeg" alt="Campamento del Master Alexander, actividad anterior 5">
+        <img loading="lazy" src="master-alexander-06.jpeg" alt="Campamento del Master Alexander, actividad anterior 6">
+        <img loading="lazy" src="master-alexander-07.jpeg" alt="Campamento del Master Alexander, actividad anterior 7">
+        <img loading="lazy" src="master-alexander-08.jpeg" alt="Campamento del Master Alexander, actividad anterior 8">
+        <img loading="lazy" src="master-alexander-09.jpeg" alt="Campamento del Master Alexander, actividad anterior 9">
+        <img loading="lazy" src="master-alexander-10.jpeg" alt="Campamento del Master Alexander, actividad anterior 10">
+        <img loading="lazy" src="master-alexander-11.jpeg" alt="Campamento del Master Alexander, actividad anterior 11">
+        <img loading="lazy" src="master-alexander-12.jpeg" alt="Campamento del Master Alexander, actividad anterior 12">
+        <img loading="lazy" src="master-alexander-13.jpeg" alt="Campamento del Master Alexander, actividad anterior 13">
+        <img loading="lazy" src="master-alexander-14.jpeg" alt="Campamento del Master Alexander, actividad anterior 14">
+        <img loading="lazy" src="master-alexander-15.jpeg" alt="Campamento del Master Alexander, actividad anterior 15">
+        <img loading="lazy" src="master-alexander-16.jpeg" alt="Campamento del Master Alexander, actividad anterior 16">
+        <img loading="lazy" src="master-alexander-17.jpeg" alt="Campamento del Master Alexander, actividad anterior 17">
+      </div>
+    </div>
+  </div>
+  <div class="event-modal" id="exam-event-modal" aria-hidden="true">
+    <div class="event-modal-card" role="dialog" aria-modal="true" aria-labelledby="exam-event-title">
+      <button class="event-close" type="button" aria-label="Cerrar ventana">X</button>
+      <p class="eyebrow">Evento del club</p>
+      <h2 id="exam-event-title">Exámenes de ascenso de cinturón</h2>
+      <div class="event-meta">
+        <div>
+          <span>Fecha</span>
+          <strong>Primera semana de julio</strong>
+        </div>
+        <div>
+          <span>Lugar</span>
+          <strong>(No confirmado)</strong>
+        </div>
+      </div>
+      <p>Durante la jornada se revisa técnica base, formas, defensa, actitud, disciplina y dominio correspondiente al nivel de cada practicante.</p>
+      <p>Este espacio permite reconocer el proceso de entrenamiento, fortalecer la confianza del estudiante y acompañar su crecimiento dentro del club.</p>
+      <div class="event-phases" aria-label="Fases del examen">
+        <div class="event-phase">
+          <h3>Fase física</h3>
+          <p>Trabajo de resistencia, acondicionamiento, pateos y actividad física continua. La jornada puede durar entre 3 y 4 horas.</p>
+        </div>
+        <div class="event-phase">
+          <h3>Fase práctica</h3>
+          <p>Evaluación de técnicas, formas, desplazamientos, defensa y ejecución marcial según el grado del estudiante.</p>
+        </div>
+        <div class="event-phase">
+          <h3>Fase teórica</h3>
+          <p>Examen escrito para revisar conceptos, vocabulario, principios y conocimientos propios del proceso formativo.</p>
+        </div>
+      </div>
+      <button class="event-album-toggle" type="button" aria-expanded="false" data-close-label="Ocultar exámenes anteriores">Ver exámenes anteriores</button>
+      <div class="event-album" aria-label="Álbum de exámenes anteriores">
+        <img loading="lazy" src="examenes-ascenso-1.jpg" alt="Estudiantes reunidos durante examen anterior de ascenso de cinturón">
+        <img loading="lazy" src="examenes-ascenso-2.jpg" alt="Practicantes realizando técnica grupal en examen anterior">
+        <img loading="lazy" src="examenes-ascenso-3.jpg" alt="Estudiantes formados en cancha durante examen de ascenso">
+        <img loading="lazy" src="examenes-ascenso-4.jpg" alt="Grupo de estudiantes en práctica de examen de cinturón">
+        <img loading="lazy" src="examenes-ascenso-5.jpeg" alt="Grupo de estudiantes y familias en jornada de examen de ascenso">
+        <img loading="lazy" src="examenes-ascenso-6.jpeg" alt="Equipo de evaluación y practicantes durante examen de cinturón">
+        <img loading="lazy" src="examenes-ascenso-7.jpeg" alt="Practicantes certificados en examen de ascenso del club">
+        <img loading="lazy" src="examenes-ascenso-8.jpeg" alt="Estudiantes con certificados junto al equipo formativo">
+        <img loading="lazy" src="examenes-ascenso-9.jpeg" alt="Grupo general con certificados al cierre del examen">
+        <img loading="lazy" src="examenes-ascenso-10.jpeg" alt="Promovidos en formación durante jornada de examen">
+        <img loading="lazy" src="examenes-ascenso-11.jpeg" alt="Mesa de maestros y jurados durante evaluación de ascenso">
+        <img loading="lazy" src="examenes-ascenso-12.jpeg" alt="Estudiantes atentos a las indicaciones antes del examen">
+        <img loading="lazy" src="examenes-ascenso-13.jpeg" alt="Profesores y aspirantes en jornada de ascenso de cinturón">
+        <img loading="lazy" src="examenes-ascenso-14.jpeg" alt="Grupo amplio de alumnos con certificados obtenidos en el examen">
+        <img loading="lazy" src="examenes-ascenso-15.jpeg" alt="Participantes del examen de ascenso posando con sus resultados">
+      </div>
+    </div>
+  </div>
+  <script>
+    const menuButton = document.querySelector(".brand-menu-toggle");
+    const menuPanel = document.querySelector(".brand-menu-panel");
+    if (menuButton && menuPanel) {
+      menuButton.addEventListener("click", () => {
+        const isOpen = menuPanel.classList.toggle("open");
+        menuButton.setAttribute("aria-expanded", String(isOpen));
+      });
+      document.addEventListener("click", (event) => {
+        const clickedInsideMenu = menuPanel.contains(event.target) || menuButton.contains(event.target);
+        if (!clickedInsideMenu) {
+          menuPanel.classList.remove("open");
+          menuButton.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+    document.querySelectorAll(".schedule-card").forEach((card) => {
+      const button = card.querySelector(".schedule-action");
+      const details = card.querySelector(".schedule-details");
+      if (!button || !details) return;
+
+      button.addEventListener("click", () => {
+        if (button.dataset.eventModal) {
+          const modal = document.getElementById(button.dataset.eventModal);
+          openEventModal(modal);
+          return;
+        }
+
+        const isOpen = details.classList.toggle("open");
+        button.setAttribute("aria-expanded", String(isOpen));
+        button.textContent = isOpen ? "Ver menos" : "Ver más";
+      });
+    });
+
+    function openEventModal(modal) {
+      if (!modal) return;
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeEventModal(modal) {
+      if (!modal) return;
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    function closeAllEventModals() {
+      document.querySelectorAll(".event-modal.open").forEach(closeEventModal);
+    }
+
+    document.querySelectorAll(".event-modal").forEach((modal) => {
+      const closeButton = modal.querySelector(".event-close");
+      if (closeButton) {
+        closeButton.addEventListener("click", () => closeEventModal(modal));
+      }
+
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeEventModal(modal);
+      });
+    });
+
+    document.querySelectorAll(".event-album-toggle").forEach((albumToggle) => {
+      const eventAlbum = albumToggle.parentElement.querySelector(".event-album");
+      const openLabel = albumToggle.textContent;
+      const closeLabel = albumToggle.dataset.closeLabel || "Ocultar galería";
+      if (!eventAlbum) return;
+
+      albumToggle.addEventListener("click", () => {
+        const isOpen = eventAlbum.classList.toggle("open");
+        albumToggle.setAttribute("aria-expanded", String(isOpen));
+        albumToggle.textContent = isOpen ? closeLabel : openLabel;
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeAllEventModals();
+    });
+  </script>
+</body>
+</html>

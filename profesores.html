@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipo Formativo | Lynx Hoga Ki</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: "Montserrat", sans-serif; background: linear-gradient(180deg, #fcfbf8 0%, #f2efea 100%); color: #101522; }
+    .wrap { width: min(calc(100% - 2rem), 1000px); margin: 0 auto; padding: 2rem 0 4rem; }
+    h1, h2 { margin: 0; font-family: "Bebas Neue", sans-serif; letter-spacing: .04em; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: .74rem; font-weight: 800; color: #d91f16; margin: 0 0 .4rem; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .brand { display:flex; align-items:center; gap:.9rem; }
+    .brand img { width:72px; height:72px; border-radius:50%; border:2px solid rgba(16,21,34,.08); background:#fff; }
+    .brand-menu { position: relative; }
+    .brand-menu-toggle { border:0; padding:0; background:transparent; text-align:left; cursor:pointer; }
+    .brand-menu-panel {
+      position: absolute; top: calc(100% + .8rem); left: 0; min-width: 220px; padding: .8rem; display: none;
+      flex-direction: column; gap: .35rem; background: rgba(255,255,255,.98); border: 1px solid rgba(16,21,34,.08);
+      border-radius: 22px; box-shadow: 0 24px 40px rgba(16,21,34,.18);
+    }
+    .brand-menu-panel.open { display: flex; }
+    .brand-menu-panel a {
+      text-decoration: none; color: #101522; padding: .8rem .9rem; border-radius: 14px; font-weight: 700;
+    }
+    .brand-menu-panel a:hover { background: rgba(217,31,22,.08); color: #b9150d; }
+    .page-title { text-align:right; }
+    .panel { background: #fff; border-radius: 28px; padding: 2rem; box-shadow: 0 20px 50px rgba(16,21,34,.14); border: 1px solid rgba(16,21,34,.08); }
+    .intro { line-height: 1.8; color: #2c3242; margin: 0 0 2rem; }
+    .team-grid { display: grid; gap: 1rem; }
+    .member-card {
+      padding: 1.4rem 1.5rem;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(16,21,34,.98), rgba(28,34,47,.98));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .member-button {
+      width: 100%;
+      border: 0;
+      text-align: left;
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .member-button:hover,
+    .member-button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 38px rgba(0,0,0,.18);
+    }
+    .member-card h2 { font-size: 2rem; line-height: 1; margin-bottom: .45rem; }
+    .member-card p { margin: 0; line-height: 1.7; color: rgba(255,255,255,.82); }
+    .member-rank { display: inline-block; margin-bottom: .7rem; color: #ff544b; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; }
+    .profile-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: rgba(5, 7, 13, .82);
+      z-index: 1000;
+    }
+    .profile-modal.open { display: flex; }
+    .profile-dialog {
+      position: relative;
+      width: min(100%, 860px);
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 1.2rem;
+      padding: 1rem;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.94));
+      box-shadow: 0 26px 60px rgba(0,0,0,.28);
+      border: 1px solid rgba(16,21,34,.08);
+    }
+    .profile-photo img {
+      width: 100%;
+      height: 100%;
+      max-height: 560px;
+      object-fit: cover;
+      border-radius: 22px;
+      border: 3px solid #101522;
+      background: #fff;
+    }
+    .profile-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: .6rem .4rem;
+    }
+    .profile-content h2 {
+      font-size: 3rem;
+      line-height: .95;
+      margin-bottom: .8rem;
+      color: #101522;
+    }
+    .profile-label {
+      display: inline-block;
+      margin-bottom: .8rem;
+      color: #d91f16;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: .8rem;
+    }
+    .profile-grade {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #2c3242;
+      font-weight: 600;
+    }
+    .profile-grade-line {
+      display: block;
+    }
+    .profile-grade-line + .profile-grade-line {
+      margin-top: .5rem;
+    }
+    .profile-academy {
+      display: none;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .9rem;
+      margin-top: 1.2rem;
+    }
+    .profile-academy.show { display: grid; }
+    .profile-academy-badge {
+      display: none;
+      align-items: center;
+      gap: .8rem;
+      padding: .9rem 1rem;
+      border-radius: 18px;
+      background: rgba(16,21,34,.05);
+      border: 1px solid rgba(16,21,34,.08);
+    }
+    .profile-academy-badge.show { display: flex; }
+    .profile-academy-badge.single {
+      grid-column: 1 / -1;
+      width: 100%;
+      max-width: 430px;
+    }
+    .profile-academy-badge img {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #101522;
+      background: #fff;
+    }
+    .profile-academy-text {
+      margin: 0;
+      color: #2c3242;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+    .profile-close {
+      position: absolute;
+      top: .9rem;
+      right: .9rem;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      background: #101522;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    @media (max-width: 760px) {
+      .profile-dialog { grid-template-columns: 1fr; }
+      .profile-content h2 { font-size: 2.4rem; }
+      .profile-photo img { max-height: 420px; }
+      .profile-academy { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand-menu">
+        <button class="brand-menu-toggle" type="button" aria-expanded="false" aria-controls="brand-menu-panel-profesores" aria-label="Abrir menú del club">
+          <div class="brand">
+            <img src="Lynx.jpg" alt="Logo de Lynx Hoga Ki">
+            <div>
+              <p class="eyebrow">Lynx Hoga Ki</p>
+              <h1>Club Deportivo Lynx Hoga Ki</h1>
+            </div>
+          </div>
+        </button>
+        <div id="brand-menu-panel-profesores" class="brand-menu-panel">
+          <a href="index.html">Inicio</a>
+          <a href="album-fotos.html">Álbum de fotos</a>
+          <a href="cronograma.html">Cronograma</a>
+          <a href="profesores.html">Equipo formativo</a>
+        </div>
+      </div>
+      <div class="page-title">
+        <p class="eyebrow">Sección</p>
+        <h1>Equipo formativo</h1>
+      </div>
+    </div>
+    <section class="panel">
+      <p class="eyebrow">Guía marcial</p>
+      <h2>Formación respaldada por experiencia, trayectoria y compromiso con el club.</h2>
+      <p class="intro">
+        El equipo formativo de <strong>Lynx Hoga Ki</strong> reúne maestros, sensei, profesores y monitores
+        que acompañan el crecimiento técnico, humano y marcial de cada practicante dentro y fuera del tatami.
+      </p>
+      <div class="team-grid">
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Víctor Mora"
+          data-profile-role="Gran Master"
+          data-profile-grade="Fundador de la Hap Wha Sool, referente importante para el programa de Lynx Hoga Ki y maestro de Jeffersson Torres Muñoz. Cinturón negro 8vo Dan en Hapkido."
+          data-profile-image="victor.jpg"
+          data-profile-academy-image="Hap.jpg"
+          data-profile-academy-text="Hap Wha Sool"
+        >
+          <span class="member-rank">Gran Master</span>
+          <h2>Víctor Mora</h2>
+          <p>Cinturón negro 8vo Dan en Hapkido.</p>
+        </button>
+
+        <article class="member-card">
+          <span class="member-rank">Maestro</span>
+          <h2>Jhon Gutiérrez</h2>
+          <p>Cinturón negro 7mo Dan en Taekwondo.</p>
+        </article>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Florencio Rodríguez"
+          data-profile-role="Master"
+          data-profile-grade="Referente del proceso formativo y del equipo marcial que acompaña al maestro Jeffersson Torres Muñoz."
+          data-profile-image="Florencio Rodriguez.png"
+        >
+          <span class="member-rank">Master</span>
+          <h2>Florencio Rodríguez</h2>
+          <p>Master del proceso formativo que acompaña al club.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Jeffersson Torres Muñoz"
+          data-profile-role="Maestro y director"
+          data-profile-grade="Director y fundador del Club Deportivo Lynx Hoga Ki. Cinturón negro 5to Dan en Taekwondo y 4to Dan en Hapkido."
+          data-profile-image="master.jpg"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Maestro y director</span>
+          <h2>Jeffersson Torres Muñoz</h2>
+          <p>Cinturón negro 5to Dan en Taekwondo y 4to Dan en Hapkido.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Jhon Castillo"
+          data-profile-role="Sensei"
+          data-profile-grade="Cinturón 3 Dan en Shotokan a nivel internacional. Director del club Dojo Kenkyokan."
+          data-profile-image="Poveda Castillo Jhon.jpeg"
+        >
+          <span class="member-rank">Sensei</span>
+          <h2>Jhon Castillo</h2>
+          <p>Cinturón 3 Dan en Shotokan.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Omar Guerrero"
+          data-profile-role="ViceMaster"
+          data-profile-grade="ViceMaster. Cinturón negro 3 Dan en Hapkido y 1er Dan en Taekwondo. Director de la academia Oasis."
+          data-profile-image="Omar Guerrero.jpeg"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">ViceMaster</span>
+          <h2>Omar Guerrero</h2>
+          <p>Cinturón negro 3 Dan en Hapkido y 1er Dan en Taekwondo.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Camilo Moreno"
+          data-profile-role="Profesor"
+          data-profile-grade="Cinturón negro 2do Dan en Hapkido y franja negra en Taekwondo. Director de la academia Águilas Doradas."
+          data-profile-image="Camilo.jpg"
+          data-profile-academy-image="aguillas.jpg"
+          data-profile-academy-text="Academia Águilas Doradas"
+          data-profile-academy-image-two="Lynx.jpg"
+          data-profile-academy-text-two="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Profesor</span>
+          <h2>Camilo Moreno</h2>
+          <p>Cinturón negro 2do Dan en Hapkido y franja negra en Taekwondo.</p>
+        </button>
+
+        <article class="member-card">
+          <span class="member-rank">Profesor</span>
+          <h2>William Santana</h2>
+          <p>2do Dan en Hapkido.</p>
+        </article>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Andrés Leiva"
+          data-profile-role="Profesor"
+          data-profile-grade="Cinturón negro 1er Dan en Taekwondo y Hapkido. Reside en Australia."
+          data-profile-image="Leyva.jpg"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Profesor</span>
+          <h2>Andrés Leiva</h2>
+          <p>Cinturón negro 1er Dan en Taekwondo y Hapkido.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Karen Tatiana"
+          data-profile-role="Profesora"
+          data-profile-grade="Profesora de la academia Oasis. 1er Dan en Hapkido y 1er Dan en Taekwondo."
+          data-profile-image="WhatsApp Image 2026-04-29 at 12.12.03 PM.jpeg"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Profesora</span>
+          <h2>Karen Tatiana</h2>
+          <p>1er Dan en Hapkido y 1er Dan en Taekwondo.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Jeison Alvarez"
+          data-profile-role="Profesor"
+          data-profile-grade="Profesor de la Academia del Maestro Alexander. 1er Dan en Hapkido."
+          data-profile-image="Yeison Alvarez.jpeg"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Profesor</span>
+          <h2>Jeison Alvarez</h2>
+          <p>Cinturón negro 1er Dan en Hapkido.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Duvan Felipe Torres Soto"
+          data-profile-role="Profesor"
+          data-profile-grade="Hijo del master Jeffersson Torres Muñoz. Profesor de la academia Lynx Hoga Ki. 1er Dan en Taekwondo y Hapkido."
+          data-profile-image="Duvan.jpg"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Profesor</span>
+          <h2>Duvan Torres</h2>
+          <p>Cinturón negro 1er Dan en Taekwondo y Hapkido.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Valery Martínez Luna"
+          data-profile-role="Profesora"
+          data-profile-grade="Profesora de la academia Lynx Hoga Ki. 1er Dan en Taekwondo y Hapkido."
+          data-profile-image="Valery.jpeg"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Profesora</span>
+          <h2>Valery Martínez Luna</h2>
+          <p>Cinturón 1er Dan en Taekwondo y Hapkido.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Juan David Mendivelso Romero"
+          data-profile-role="Profesor"
+          data-profile-grade="Profesor de la academia Lynx Hoga Ki. 1er Dan en Taekwondo y Hapkido."
+          data-profile-image="Juan.jpg"
+          data-profile-position="center top"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Profesor</span>
+          <h2>Juan David Mendivelso Romero</h2>
+          <p>Cinturón negro 1er Dan en Taekwondo y Hapkido.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Gacha"
+          data-profile-role="Profesor"
+          data-profile-grade="Cinturón negro 1er Dan en Taekwondo."
+          data-profile-image="Gacha.jpg"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Profesor</span>
+          <h2>Gacha</h2>
+          <p>Cinturón negro 1er Dan en Taekwondo.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Jesús Mendivelso"
+          data-profile-role="Monitor"
+          data-profile-grade="Monitor dentro de la academia Lynx Hoga Ki. Cinturón rojo en Taekwondo y Hapkido."
+          data-profile-image="Chucho.jpg"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Monitor</span>
+          <h2>Jesús Mendivelso</h2>
+          <p>Cinturón rojo en Taekwondo y Hapkido.</p>
+        </button>
+
+        <button
+          class="member-card member-button"
+          type="button"
+          data-profile-name="Hemer Santiago Pérez Nieves"
+          data-profile-role="Monitor"
+          data-profile-grade="Monitor dentro de la academia Lynx Hoga Ki. Cinturón rojo en Taekwondo y Hapkido."
+          data-profile-image="Santiago.png"
+          data-profile-academy-image="Lynx.jpg"
+          data-profile-academy-text="Club Deportivo Lynx Hoga Ki"
+        >
+          <span class="member-rank">Monitor</span>
+          <h2>Hemer Santiago Pérez Nieves</h2>
+          <p>Cinturón rojo en Taekwondo y Hapkido.</p>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <div class="profile-modal" id="profile-modal" aria-hidden="true">
+    <div class="profile-dialog">
+      <button class="profile-close" type="button" aria-label="Cerrar ficha">X</button>
+      <div class="profile-photo">
+        <img id="profile-image" src="" alt="">
+      </div>
+      <div class="profile-content">
+        <span class="profile-label" id="profile-role"></span>
+        <h2 id="profile-name"></h2>
+        <div class="profile-grade" id="profile-grade"></div>
+        <div class="profile-academy" id="profile-academy">
+          <div class="profile-academy-badge" id="profile-academy-badge-1">
+            <img id="profile-academy-image" src="" alt="">
+            <p class="profile-academy-text" id="profile-academy-text"></p>
+          </div>
+          <div class="profile-academy-badge" id="profile-academy-badge-2">
+            <img id="profile-academy-image-2" src="" alt="">
+            <p class="profile-academy-text" id="profile-academy-text-2"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const menuButton = document.querySelector(".brand-menu-toggle");
+    const menuPanel = document.querySelector(".brand-menu-panel");
+    if (menuButton && menuPanel) {
+      menuButton.addEventListener("click", () => {
+        const isOpen = menuPanel.classList.toggle("open");
+        menuButton.setAttribute("aria-expanded", String(isOpen));
+      });
+      document.addEventListener("click", (event) => {
+        const clickedInsideMenu = menuPanel.contains(event.target) || menuButton.contains(event.target);
+        if (!clickedInsideMenu) {
+          menuPanel.classList.remove("open");
+          menuButton.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+
+    const profileButtons = document.querySelectorAll("[data-profile-name]");
+    const profileModal = document.querySelector("#profile-modal");
+    const profileName = document.querySelector("#profile-name");
+    const profileRole = document.querySelector("#profile-role");
+    const profileGrade = document.querySelector("#profile-grade");
+    const profileImage = document.querySelector("#profile-image");
+    const profileAcademy = document.querySelector("#profile-academy");
+    const profileAcademyBadge1 = document.querySelector("#profile-academy-badge-1");
+    const profileAcademyBadge2 = document.querySelector("#profile-academy-badge-2");
+    const profileAcademyImage = document.querySelector("#profile-academy-image");
+    const profileAcademyImage2 = document.querySelector("#profile-academy-image-2");
+    const profileAcademyText = document.querySelector("#profile-academy-text");
+    const profileAcademyText2 = document.querySelector("#profile-academy-text-2");
+    const profileClose = document.querySelector(".profile-close");
+
+    function formatProfileGrade(text) {
+      return text
+        .split(". ")
+        .filter(Boolean)
+        .map((line) => {
+          const cleanLine = line.endsWith(".") ? line : `${line}.`;
+          return `<span class="profile-grade-line">${cleanLine}</span>`;
+        })
+        .join("");
+    }
+
+    function closeProfile() {
+      profileModal.classList.remove("open");
+      profileModal.setAttribute("aria-hidden", "true");
+      profileImage.src = "";
+      profileImage.style.objectPosition = "center center";
+      profileGrade.innerHTML = "";
+      profileAcademy.classList.remove("show");
+      profileAcademyBadge1.classList.remove("show");
+      profileAcademyBadge1.classList.remove("single");
+      profileAcademyBadge2.classList.remove("show");
+      profileAcademyImage.src = "";
+      profileAcademyImage2.src = "";
+      profileAcademyText.textContent = "";
+      profileAcademyText2.textContent = "";
+    }
+
+    profileButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        profileName.textContent = button.dataset.profileName;
+        profileRole.textContent = button.dataset.profileRole;
+        profileGrade.innerHTML = formatProfileGrade(button.dataset.profileGrade);
+        profileImage.src = button.dataset.profileImage;
+        profileImage.alt = button.dataset.profileName;
+        profileImage.style.objectPosition = button.dataset.profilePosition || "center center";
+
+        const hasAcademy1 = Boolean(button.dataset.profileAcademyImage);
+        const hasAcademy2 = Boolean(button.dataset.profileAcademyImageTwo);
+
+        if (hasAcademy1 || hasAcademy2) {
+          if (hasAcademy1) {
+            profileAcademyImage.src = button.dataset.profileAcademyImage;
+            profileAcademyImage.alt = button.dataset.profileAcademyText || "Academia";
+            profileAcademyText.textContent = button.dataset.profileAcademyText || "";
+            profileAcademyBadge1.classList.add("show");
+            if (!hasAcademy2) {
+              profileAcademyBadge1.classList.add("single");
+            } else {
+              profileAcademyBadge1.classList.remove("single");
+            }
+          } else {
+            profileAcademyImage.src = "";
+            profileAcademyText.textContent = "";
+            profileAcademyBadge1.classList.remove("show");
+            profileAcademyBadge1.classList.remove("single");
+          }
+
+          if (hasAcademy2) {
+            profileAcademyImage2.src = button.dataset.profileAcademyImageTwo;
+            profileAcademyImage2.alt = button.dataset.profileAcademyTextTwo || "Club";
+            profileAcademyText2.textContent = button.dataset.profileAcademyTextTwo || "";
+            profileAcademyBadge2.classList.add("show");
+          } else {
+            profileAcademyImage2.src = "";
+            profileAcademyText2.textContent = "";
+            profileAcademyBadge2.classList.remove("show");
+          }
+
+          profileAcademy.classList.add("show");
+        } else {
+          profileAcademy.classList.remove("show");
+          profileAcademyBadge1.classList.remove("show");
+          profileAcademyBadge1.classList.remove("single");
+          profileAcademyBadge2.classList.remove("show");
+          profileAcademyImage.src = "";
+          profileAcademyImage2.src = "";
+          profileAcademyText.textContent = "";
+          profileAcademyText2.textContent = "";
+        }
+
+        profileModal.classList.add("open");
+        profileModal.setAttribute("aria-hidden", "false");
+      });
+    });
+
+    if (profileClose && profileModal) {
+      profileClose.addEventListener("click", closeProfile);
+      profileModal.addEventListener("click", (event) => {
+        if (event.target === profileModal) closeProfile();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && profileModal.classList.contains("open")) {
+          closeProfile();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
