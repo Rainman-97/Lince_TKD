@@ -726,6 +726,55 @@ a {
   color: var(--ink);
 }
 
+.social-links {
+  margin-top: 1.4rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.social-label {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--red);
+}
+
+.social-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.social-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 48px;
+  padding: 0.65rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(16, 21, 34, 0.1);
+  color: var(--ink);
+  font-weight: 800;
+  box-shadow: 0 12px 28px rgba(16, 21, 34, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease, color 180ms ease;
+}
+
+.social-list a:hover,
+.social-list a:focus-visible {
+  color: var(--red-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(16, 21, 34, 0.12);
+}
+
+.social-list img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
 .map-card {
   position: relative;
   min-height: 240px;
