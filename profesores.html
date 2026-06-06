@@ -14,8 +14,31 @@
     h1, h2 { margin: 0; font-family: "Bebas Neue", sans-serif; letter-spacing: .04em; }
     .eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: .74rem; font-weight: 800; color: #d91f16; margin: 0 0 .4rem; }
     .top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; }
-    .brand { display:flex; align-items:center; gap:.9rem; }
-    .brand img { width:72px; height:72px; border-radius:50%; border:2px solid rgba(16,21,34,.08); background:#fff; }
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:.9rem;
+      padding:.55rem .85rem .55rem .7rem;
+      border-radius:24px;
+      background:rgba(255,255,255,.82);
+      border:1px solid rgba(16,21,34,.08);
+      box-shadow:0 16px 32px rgba(16,21,34,.08);
+      backdrop-filter: blur(10px);
+    }
+    .brand > div { display:grid; gap:.06rem; }
+    .brand img {
+      width:68px;
+      height:68px;
+      border-radius:18px;
+      border:1px solid rgba(16,21,34,.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(246,243,238,.96)),
+        #fff;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.62),
+        0 10px 20px rgba(16,21,34,.08);
+      padding:.35rem;
+    }
     .brand-menu { position: relative; }
     .brand-menu-toggle { border:0; padding:0; background:transparent; text-align:left; cursor:pointer; }
     .brand-menu-panel {
@@ -194,6 +217,7 @@
           <a href="index.html">Inicio</a>
           <a href="album-fotos.html">Álbum de fotos</a>
           <a href="cronograma.html">Cronograma</a>
+          <a href="cuaderno_LHK.html">Cuaderno LHK</a>
           <a href="profesores.html">Equipo formativo</a>
         </div>
       </div>
