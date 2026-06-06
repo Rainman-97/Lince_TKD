@@ -175,6 +175,30 @@ a {
   padding: 0.35rem;
 }
 
+.cuaderno-page .site-header {
+  align-items: flex-start;
+}
+
+.cuaderno-page .brand {
+  min-width: 360px;
+}
+
+.cuaderno-page .cuaderno-brand {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.cuaderno-page .cuaderno-brand img {
+  width: 74px;
+  height: 74px;
+  border-radius: 20px;
+  padding: 0.32rem;
+}
+
+.cuaderno-page .cuaderno-brand h1 {
+  font-size: 1.85rem;
+  line-height: 0.95;
+}
+
 .brand h1,
 .hero h2,
 .section h2,
@@ -1233,6 +1257,23 @@ a {
 }
 
 @media (max-width: 760px) {
+  .cuaderno-page .brand {
+    min-width: 0;
+  }
+
+  .cuaderno-page .cuaderno-brand {
+    padding: 0.45rem 0.65rem;
+  }
+
+  .cuaderno-page .cuaderno-brand img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .cuaderno-page .cuaderno-brand h1 {
+    font-size: 1.35rem;
+  }
+
   .notebook-hero-copy h2 {
     font-size: clamp(3rem, 15vw, 4.6rem);
     max-width: none;
