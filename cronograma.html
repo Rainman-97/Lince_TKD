@@ -14,8 +14,31 @@
     h1, h2 { margin: 0; font-family: "Bebas Neue", sans-serif; letter-spacing: .04em; }
     .eyebrow { text-transform: uppercase; letter-spacing: .2em; font-size: .74rem; font-weight: 800; color: #d91f16; margin: 0 0 .4rem; }
     .top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; }
-    .brand { display:flex; align-items:center; gap:.9rem; }
-    .brand img { width:72px; height:72px; border-radius:50%; border:2px solid rgba(255,255,255,.12); background:#fff; }
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:.9rem;
+      padding:.55rem .85rem .55rem .7rem;
+      border-radius:24px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 16px 32px rgba(0,0,0,.14);
+      backdrop-filter: blur(10px);
+    }
+    .brand > div { display:grid; gap:.06rem; }
+    .brand img {
+      width:68px;
+      height:68px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(246,243,238,.96)),
+        #fff;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.62),
+        0 10px 20px rgba(0,0,0,.08);
+      padding:.35rem;
+    }
     .brand-menu { position: relative; }
     .brand-menu-toggle { border:0; padding:0; background:transparent; text-align:left; cursor:pointer; color:inherit; }
     .brand-menu-panel {
@@ -172,6 +195,81 @@
     .event-meta strong {
       color: #fff;
     }
+    .event-location {
+      position: relative;
+      display: block;
+      min-height: 150px;
+      margin: 1rem 0;
+      padding: 1rem;
+      border-radius: 18px;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(217,31,22,.92), rgba(16,21,34,.96)),
+        #101522;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 18px 38px rgba(0,0,0,.22);
+    }
+    .event-location::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: .55;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.9), transparent);
+    }
+    .event-location-pin {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      box-shadow: 0 0 0 8px rgba(255,255,255,.14);
+    }
+    .event-location-pin::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      background: #d91f16;
+    }
+    .event-location-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: .35rem;
+      align-content: end;
+      min-height: 118px;
+    }
+    .event-location-label {
+      margin: 0;
+      color: rgba(255,255,255,.72);
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .event-location strong {
+      display: block;
+      max-width: 640px;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.45rem);
+      line-height: 1;
+      letter-spacing: .04em;
+    }
+    .event-location-link {
+      width: fit-content;
+      margin-top: .4rem;
+      padding-bottom: .15rem;
+      border-bottom: 2px solid #fff;
+      font-weight: 800;
+    }
     .event-phases {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -258,6 +356,7 @@
           <a href="index.html">Inicio</a>
           <a href="album-fotos.html">Álbum de fotos</a>
           <a href="cronograma.html">Cronograma</a>
+          <a href="cuaderno_LHK.html">Cuaderno LHK</a>
           <a href="profesores.html">Equipo formativo</a>
         </div>
       </div>
@@ -275,16 +374,6 @@
       <div class="schedule-grid">
         <article class="schedule-card">
           <p class="schedule-date">7 de junio</p>
-          <h2>Copa Colombia</h2>
-          <p>Jornada deportiva de participación y representación del Club Deportivo Lynx Hoga Ki.</p>
-          <button class="schedule-action" type="button" data-event-modal="copa-event-modal">Ver más</button>
-          <div class="schedule-details">
-            <p>La Copa Colombia de Taekwondo reúne deportistas por categorías y modalidades como combate, poomsae, freestyle, TK3 y para-taekwondo. En la edición oficial publicada por la Secretaría de Cultura, Recreación y Deporte de Bogotá, el evento fue organizado por la Federación Colombiana de Taekwondo y se rigió por el reglamento de World Taekwondo.</p>
-            <p><a href="https://www.culturarecreacionydeporte.gov.co/es/eventos/copa-colombia-de-taekwondo" target="_blank" rel="noopener">Fuente oficial consultada</a></p>
-          </div>
-        </article>
-        <article class="schedule-card">
-          <p class="schedule-date">7 de junio</p>
           <h2>Seminario del Sensei Jhon</h2>
           <p>Espacio dedicado a la mejora de técnica, ajustes y disciplina, impartido desde el karate con trabajo de kata.</p>
           <button class="schedule-action" type="button" data-event-modal="jhon-event-modal">Ver más</button>
@@ -293,7 +382,7 @@
           </div>
         </article>
         <article class="schedule-card">
-          <p class="schedule-date">14 de junio</p>
+          <p class="schedule-date">14 de Junio</p>
           <h2>Campamento del Master Alexander</h2>
           <p>Evento formativo de la academia CME MOM JEONGSIN con fogueos, saltos, combates, exhibiciones y medallería.</p>
           <button class="schedule-action" type="button" data-event-modal="master-event-modal">Ver más</button>
@@ -324,34 +413,6 @@
       </div>
     </section>
   </div>
-  <div class="event-modal" id="copa-event-modal" aria-hidden="true">
-    <div class="event-modal-card" role="dialog" aria-modal="true" aria-labelledby="copa-event-title">
-      <button class="event-close" type="button" aria-label="Cerrar ventana">X</button>
-      <p class="eyebrow">Competencia nacional</p>
-      <h2 id="copa-event-title">Copa Colombia</h2>
-      <div class="event-meta">
-        <div>
-          <span>Fecha</span>
-          <strong>7 de junio</strong>
-        </div>
-        <div>
-          <span>Lugar</span>
-          <strong>El palacio de los deportes</strong>
-        </div>
-      </div>
-      <p>La Copa Colombia de Taekwondo es un evento nacional de alto nivel que reúne deportistas de categorías pre-infantil, infantil, juvenil y senior. En ediciones anteriores ha incluido modalidades como combate individual, poomsae, freestyle, TK3 y para-taekwondo.</p>
-      <p>Según la publicación oficial de la Secretaría de Cultura, Recreación y Deporte de Bogotá, la edición XXXVII fue organizada por la Federación Colombiana de Taekwondo y se rigió por el reglamento vigente de World Taekwondo.</p>
-      <button class="event-album-toggle" type="button" aria-expanded="false" data-close-label="Ocultar imágenes anteriores">Ver imágenes anteriores</button>
-      <div class="event-album" aria-label="Álbum de Copa Colombia y eventos nacionales de taekwondo">
-        <img loading="lazy" src="https://www.culturarecreacionydeporte.gov.co/sites/default/files/images/idrd-taekwondo-palacio-de-los-deportes.png" alt="Copa Colombia de Taekwondo en el Palacio de los Deportes, foto IDRD">
-        <img loading="lazy" src="https://boyaca7dias.com.co/wp-content/uploads/2024/06/delegacion-sogamoso-taekwondo.jpg" alt="Delegación boyacense campeona de Copa Colombia de Taekwondo 2024">
-        <img loading="lazy" src="https://www.boyaca.gov.co/wp-content/uploads/2024/12/WhatsApp-Image-2024-12-23-at-11.08.58-AM.jpeg" alt="Delegación de taekwondo en competencia nacional de 2024">
-        <img loading="lazy" src="https://bogota.gov.co/sites/default/files/styles/1050px/public/2025-06/equipo-bogota-cuenta-con-agenda-llena-para-proximos-eventos-deportivos-2.png" alt="Agenda deportiva de Bogotá con participación en Copa Colombia de Taekwondo">
-        <img loading="lazy" src="copa-colombia-5.jpg" alt="Combate de taekwondo en competencia nacional">
-      </div>
-      <p><a href="https://www.culturarecreacionydeporte.gov.co/es/eventos/copa-colombia-de-taekwondo" target="_blank" rel="noopener">Fuente principal</a></p>
-    </div>
-  </div>
   <div class="event-modal" id="jhon-event-modal" aria-hidden="true">
     <div class="event-modal-card" role="dialog" aria-modal="true" aria-labelledby="jhon-event-title">
       <button class="event-close" type="button" aria-label="Cerrar ventana">X</button>
@@ -364,9 +425,23 @@
         </div>
         <div>
           <span>Lugar</span>
-          <strong>(No confirmado)</strong>
+          <strong>Conj. Resid. Ciudad Tintal 2 Et. 11</strong>
         </div>
       </div>
+      <a
+        class="event-location"
+        href="https://www.google.com/maps/search/?api=1&query=Conjunto+Residencial+Ciudad+Tintal+2+Etapa+11+Cra+94A+No+6C+18+Bogota"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Abrir ubicación del seminario del Sensei Jhon en Google Maps"
+      >
+        <span class="event-location-pin"></span>
+        <span class="event-location-content">
+          <span class="event-location-label">Google Maps</span>
+          <strong>Cra. 94A No. 6C-18</strong>
+          <span class="event-location-link">Ver ubicación</span>
+        </span>
+      </a>
       <p>El seminario se enfoca en precisión, postura, control corporal y correcciones que ayudan al estudiante a entender mejor cada movimiento.</p>
       <p>La jornada integra acondicionamiento físico, práctica guiada, revisión de bases, formas y aplicación marcial, fortaleciendo la concentración y la exigencia personal dentro del entrenamiento.</p>
       <button class="event-album-toggle" type="button" aria-expanded="false" data-close-label="Ocultar seminarios anteriores">Ver seminarios anteriores</button>
@@ -419,9 +494,23 @@
         </div>
         <div>
           <span>Lugar</span>
-          <strong>Coliseo - Colegio Sede A Kennedy - Calle 5Sur 72A-69</strong>
+          <strong>Coliseo - Colegio Sede A Kennedy</strong>
         </div>
       </div>
+      <a
+        class="event-location"
+        href="https://www.google.com/maps/search/?api=1&query=Coliseo+Colegio+Sede+A+Kennedy+Calle+5+Sur+72A-69+Bogota"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Abrir ubicación del Campamento del Master Alexander en Google Maps"
+      >
+        <span class="event-location-pin"></span>
+        <span class="event-location-content">
+          <span class="event-location-label">Google Maps</span>
+          <strong>Calle 5 Sur 72A-69</strong>
+          <span class="event-location-link">Ver ubicación</span>
+        </span>
+      </a>
       <p>Evento de la academia CME MOM JEONGSIN dirigido por el Master Alexander, pensado especialmente para el desarrollo del estudiante a través de retos técnicos, preparación física, disciplina, convivencia y participación deportiva.</p>
       <p>Incluye fogueos, salto alto, salto largo, combates y exhibiciones de escuelas y academias, con premiación por medallería para reconocer el esfuerzo, la actitud y el crecimiento de los participantes.</p>
       <p>También fortalece el trabajo en equipo, la integración del club y la convivencia con practicantes de otras academias.</p>
@@ -533,6 +622,7 @@
         <img loading="lazy" src="examenes-ascenso-51.jpeg" alt="Entrega de cinturón verde durante examen de taekwondo">
         <img loading="lazy" src="examenes-ascenso-52.jpeg" alt="Momento de felicitación entre estudiante e instructora">
         <img loading="lazy" src="examenes-ascenso-53.jpeg" alt="Alumno recibiendo ajuste de cinturón en la ceremonia">
+
       </div>
     </div>
   </div>
